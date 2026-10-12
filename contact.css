@@ -1,0 +1,633 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box
+}
+
+:root {
+    --bg: #f7f8fc;
+    --surface: #fff;
+    --surface2: #eeeeff;
+    --text: #222;
+    --muted: #666;
+    --border: #e5e5e8;
+    --primary: #5b5bf7;
+    --primary-dark: #4545d8;
+    --mode-soft: rgba(91, 91, 247, .10)
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: background-color .45s ease, color .45s ease
+}
+
+/* ================= NAVBAR ================= */
+.navbar {
+    height: 70px;
+    padding: 0 8%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
+    transition: background-color .45s ease, box-shadow .45s ease
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold
+}
+
+.logo span,
+.footer-logo span {
+    color: var(--primary)
+}
+
+.navbar nav {
+    display: flex;
+    gap: 35px
+}
+
+.navbar nav a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 15px;
+    transition: color .25s
+}
+
+.navbar nav a:hover,
+.navbar nav .active {
+    color: var(--primary)
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px
+}
+
+.login-btn {
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    padding: 11px 24px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: .25s
+}
+
+.login-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px)
+}
+
+.theme-toggle {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 21px;
+    line-height: 1;
+    transition: all .3s
+}
+
+.theme-toggle:hover {
+    transform: rotate(12deg) scale(1.05);
+    background: var(--surface2);
+    color: var(--primary)
+}
+
+/* ================= THREE MODES ================= */
+.mode-switcher {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 999px
+}
+
+.mode-switcher button {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    padding: 8px 11px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    transition: all .25s ease;
+    white-space: nowrap
+}
+
+.mode-switcher button:hover,
+.mode-switcher button.active {
+    background: var(--primary);
+    color: #fff
+}
+
+body.mode-normal {
+    --primary: #5b5bf7;
+    --primary-dark: #4545d8;
+    --surface2: #eeeeff;
+    --mode-soft: rgba(91, 91, 247, .10)
+}
+
+body.mode-grocery {
+    --primary: #1f9d55;
+    --primary-dark: #16763f;
+    --surface2: #eaf8ef;
+    --mode-soft: rgba(31, 157, 85, .10)
+}
+
+body.mode-pharmacy {
+    --primary: #087ea4;
+    --primary-dark: #05617f;
+    --surface2: #e8f6fb;
+    --mode-soft: rgba(8, 126, 164, .10)
+}
+
+/* ================= HERO ================= */
+.contact-hero {
+    text-align: center;
+    padding: 85px 20px;
+    background: var(--surface2);
+    transition: background-color .45s ease
+}
+
+.contact-hero h1 {
+    font-size: 46px;
+    margin-bottom: 16px;
+    color: var(--text)
+}
+
+.contact-hero p {
+    max-width: 650px;
+    margin: auto;
+    color: var(--muted);
+    line-height: 1.7
+}
+
+/* ================= CONTACT CONTENT ================= */
+.contact-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 65px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 50px
+}
+
+.contact-info h2,
+.contact-form h2 {
+    font-size: 28px;
+    margin-bottom: 12px
+}
+
+.info-text {
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 30px
+}
+
+.info-box {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 25px;
+    padding: 17px;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    transition: .25s
+}
+
+.info-box:hover {
+    background: var(--surface);
+    border-color: var(--border);
+    transform: translateY(-2px)
+}
+
+.icon {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface2);
+    border-radius: 12px;
+    font-size: 20px;
+    transition: .45s
+}
+
+.info-box h3 {
+    font-size: 16px;
+    margin-bottom: 5px
+}
+
+.info-box p {
+    color: var(--muted);
+    font-size: 14px
+}
+
+/* ================= FORM ================= */
+.contact-form {
+    background: var(--surface);
+    padding: 35px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .07);
+    transition: .45s
+}
+
+.contact-form h2 {
+    margin-bottom: 25px
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px
+}
+
+.input-group label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px
+}
+
+.input-group input,
+.input-group textarea {
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 13px;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    background: var(--surface);
+    color: var(--text);
+    transition: .3s
+}
+
+.input-group textarea {
+    resize: vertical
+}
+
+.input-group input::placeholder,
+.input-group textarea::placeholder {
+    color: var(--muted)
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--mode-soft)
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .25s
+}
+
+.submit-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px)
+}
+
+/* ================= FAQ ================= */
+.faq {
+    background: var(--surface);
+    padding: 70px 20px;
+    text-align: center;
+    transition: background-color .45s ease
+}
+
+.faq h2 {
+    font-size: 30px
+}
+
+.faq-subtitle {
+    color: var(--muted);
+    margin-top: 10px
+}
+
+.faq-container {
+    max-width: 1100px;
+    margin: 40px auto 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px
+}
+
+.faq-card {
+    text-align: left;
+    padding: 25px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    transition: .25s
+}
+
+.faq-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, .08);
+    border-color: var(--primary)
+}
+
+.faq-card h3 {
+    font-size: 17px;
+    margin-bottom: 10px
+}
+
+.faq-card p {
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: 14px
+}
+
+/* ================= FOOTER ================= */
+footer {
+    padding: 30px 20px;
+    text-align: center;
+    background: #18181f;
+    color: #aaa;
+    transition: background-color .45s
+}
+
+.footer-logo {
+    color: #fff;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px
+}
+
+/* ================= DARK MODE ================= */
+body.dark-mode {
+    --bg: #101116;
+    --surface: #181a21;
+    --surface2: #1b1d29;
+    --text: #f2f2f5;
+    --muted: #b7b9c3;
+    --border: #30333d
+}
+
+body.dark-mode .navbar {
+    box-shadow: 0 2px 15px rgba(0, 0, 0, .35)
+}
+
+body.dark-mode .theme-toggle {
+    color: #f7d86a;
+    background: #252832;
+    border-color: #3b3e49
+}
+
+body.dark-mode .theme-toggle:hover {
+    background: #303440;
+    color: #ffe58a
+}
+
+body.dark-mode .contact-form {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .30)
+}
+
+body.dark-mode .info-box:hover {
+    background: var(--surface);
+    border-color: var(--border)
+}
+
+body.dark-mode footer {
+    background: #0a0b0f
+}
+
+/* Anti-flicker support: the theme is placed on <html> before the page paints. */
+html.dark-mode body {
+    --bg: #101116;
+    --surface: #181a21;
+    --surface2: #1b1d29;
+    --text: #f2f2f5;
+    --muted: #b7b9c3;
+    --border: #30333d
+}
+
+html.dark-mode body.mode-grocery {
+    --primary: #42c979;
+    --primary-dark: #2aa65d;
+    --surface2: #163526;
+    --mode-soft: rgba(66, 201, 121, .14)
+}
+
+html.dark-mode body.mode-pharmacy {
+    --primary: #39b9df;
+    --primary-dark: #2395b9;
+    --surface2: #12313b;
+    --mode-soft: rgba(57, 185, 223, .14)
+}
+
+html.dark-mode body.mode-normal {
+    --primary: #8b8bff;
+    --primary-dark: #6f6fe8;
+    --surface2: #1b1d29;
+    --mode-soft: rgba(139, 139, 255, .14)
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:1100px) {
+    .navbar {
+        height: auto;
+        min-height: 70px;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px
+    }
+
+    .mode-switcher {
+        order: 4;
+        width: 100%;
+        justify-content: center
+    }
+}
+
+@media(max-width:800px) {
+    .navbar {
+        padding-left: 20px;
+        padding-right: 20px
+    }
+
+    .navbar nav {
+        display: none
+    }
+
+    .contact-container {
+        grid-template-columns: 1fr;
+        gap: 40px
+    }
+
+    .faq-container {
+        grid-template-columns: 1fr 1fr
+    }
+}
+
+@media(max-width:550px) {
+    .mode-switcher button {
+        flex: 1;
+        padding: 8px 5px;
+        font-size: 11px
+    }
+
+    .nav-actions {
+        gap: 8px
+    }
+
+    .theme-toggle {
+        width: 38px;
+        height: 38px;
+        font-size: 19px
+    }
+
+    .login-btn {
+        padding: 10px 17px
+    }
+
+    .contact-hero {
+        padding: 60px 20px
+    }
+
+    .contact-hero h1 {
+        font-size: 32px
+    }
+
+    .contact-container {
+        padding: 50px 20px
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0
+    }
+
+    .contact-form {
+        padding: 25px 20px
+    }
+
+    .faq-container {
+        grid-template-columns: 1fr
+    }
+}
+
+
+/* Logged-in user account in the shared navbar */
+.login-btn.user-account {
+    max-width: 210px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background: var(--surface2, #eeeeff);
+    color: var(--mode-accent, var(--primary, #5b5bf7));
+    border: 1px solid var(--border, #e5e5e8);
+    font-weight: 750;
+    box-shadow: none
+}
+
+.login-btn.user-account:hover {
+    background: var(--mode-accent, var(--primary, #5b5bf7));
+    color: #fff;
+    border-color: var(--mode-accent, var(--primary, #5b5bf7));
+    transform: translateY(-1px)
+}
+
+.login-btn:disabled {
+    opacity: .65;
+    cursor: wait
+}
+
+/* Final shared header refinement for Contact page */
+.navbar {
+    height: 68px !important;
+    padding: 0 clamp(18px, 4vw, 56px) !important;
+    gap: clamp(14px, 2vw, 28px) !important
+}
+
+.navbar nav {
+    gap: clamp(2px, 1vw, 8px) !important;
+    flex: 1 1 auto !important;
+    justify-content: center !important;
+    min-width: 0 !important
+}
+
+.navbar nav a {
+    padding: 8px 10px !important;
+    font-size: 13px !important;
+    white-space: nowrap !important
+}
+
+.nav-actions {
+    margin-left: 0 !important;
+    gap: 7px !important
+}
+
+.mode-switcher {
+    gap: 2px !important;
+    padding: 3px !important
+}
+
+.mode-switcher button {
+    padding: 6px 9px !important;
+    font-size: 12px !important
+}
+
+@media(max-width:800px) {
+    .navbar {
+        height: 64px !important;
+        padding-inline: 16px !important
+    }
+
+    .navbar nav {
+        display: none !important
+    }
+
+    .navbar .mode-switcher {
+        margin-left: auto !important
+    }
+
+    .navbar .logo {
+        font-size: 21px !important
+    }
+}
+
+@media(max-width:550px) {
+    .navbar {
+        padding-inline: 12px !important
+    }
+
+    .navbar .mode-switcher {
+        display: none !important
+    }
+}
+
+.language-selector {
+    display: none !important
+}

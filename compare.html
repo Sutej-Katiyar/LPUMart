@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+    <meta name="theme-color" content="#080b12">
+    <title>Compare Products | LPUMart</title>
+    <link rel="stylesheet" href="marketplace.css">
+    <link rel="stylesheet" href="cart-ui.css">
+</head>
+
+<body>
+    <script>(function () { const t = localStorage.getItem('marketplaceTheme') || 'light'; document.documentElement.classList.toggle('dark-mode', t === 'dark') })();</script>
+    <header class="navbar"><a class="logo" href="index.html">LPUMart</a>
+        <div class="mode-switcher"><button data-marketplace-mode="normal">🛍️ General</button><button
+                data-marketplace-mode="grocery">🛒 Grocery</button><button data-marketplace-mode="pharmacy">💊
+                Pharmacy</button></div>
+        <nav><a href="index.html">Home</a><a href="products.html">Products</a><a href="categories.html">Categories</a><a
+                href="contact.html">Contact</a></nav>
+        <div class="nav-actions"><button class="theme-toggle" id="themeToggle"><span
+                    id="themeIcon">☀</span></button><button class="login-btn" id="authButton">Login</button></div>
+    </header>
+    <section class="feature-hero">
+        <p class="eyebrow">DECIDE WITH CONFIDENCE</p>
+        <h1>Compare Products</h1>
+        <p>Choose up to three products and compare the details that matter before buying.</p>
+    </section>
+    <main class="section">
+        <div class="container">
+            <div class="compare-selects"><select id="c1"></select><select id="c2"></select><select id="c3"></select>
+            </div>
+            <div id="compareOut" class="compare-wrap"></div>
+        </div>
+    </main>
+    <footer>
+        <div class="footer-logo">LPUMart</div>
+        <p>© 2026 LPUMart. All rights reserved.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="mode.js"></script>
+    <script src="feature-menu.js"></script>
+    <script src="marketplace.js"></script>
+    <script src="cart-ui.js"></script>
+    <script>let compareProducts = []; async function initCompare() { const { data } = await supabaseClient.from('products').select('*').eq('marketplace_mode', getMarketplaceMode()).order('rating', { ascending: false }); compareProducts = data || []; document.querySelectorAll('.compare-selects select').forEach((s, i) => { s.innerHTML = '<option value="">Choose product ' + (i + 1) + '</option>' + compareProducts.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join(''); s.addEventListener('change', renderCompare) }); renderCompare(); } function renderCompare() { const chosen = [...document.querySelectorAll('.compare-selects select')].map(s => compareProducts.find(p => String(p.id) === s.value)).filter(Boolean); const out = document.getElementById('compareOut'); if (!chosen.length) { out.innerHTML = '<div class="empty-state" style="display:block"><h3>Select products above</h3><p>Choose two or three products to compare price, rating, stock and delivery.</p></div>'; return; } const rows = [['Product', p => `<strong>${escapeHtml(p.name)}</strong><br><img src="${productImageUrl(p)}" style="width:110px;height:90px;object-fit:contain;background:var(--surface2);border-radius:9px;margin-top:8px">`], ['Price', p => formatPrice(p.price)], ['Rating', p => `★★★★★ ${Number(p.rating || 4.5).toFixed(1)} (${Number(p.review_count || 0).toLocaleString('en-IN')})`], ['Category', p => escapeHtml(p.category)], ['Stock', p => Number(p.stock) > 0 ? `${p.stock} available` : 'Out of stock'], ['Delivery', p => escapeHtml(p.delivery_text || 'Free delivery')], ['Description', p => escapeHtml(p.description)], ['Actions', p => `<div class="product-actions"><a class="small-btn" href="product.html?id=${p.id}">View Product</a><button class="small-btn primary" onclick="addToCart(${p.id})">Add to Cart</button></div>`]]; out.innerHTML = '<table class="compare-table"><thead><tr><th>Feature</th>' + chosen.map(p => `<th>${escapeHtml(p.name)}</th>`).join('') + '</tr></thead><tbody>' + rows.map(r => `<tr><th>${r[0]}</th>${chosen.map(p => `<td>${r[1](p)}</td>`).join('')}</tr>`).join('') + '</tbody></table>'; } initCompare(); window.addEventListener('marketplaceModeChanged', initCompare);</script>
+    <script src="ui-enhancements.js"></script>
+</body>
+
+</html>

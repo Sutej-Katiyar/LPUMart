@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+    <meta name="theme-color" content="#080b12">
+    <title>Products | LPUMart</title>
+    <link rel="stylesheet" href="marketplace.css">
+    <link rel="stylesheet" href="cart-ui.css">
+</head>
+
+<body>
+    <script>(function () { const t = localStorage.getItem('marketplaceTheme') || 'light'; document.documentElement.classList.toggle('dark-mode', t === 'dark') })();</script>
+    <header class="navbar"><a class="logo" href="index.html">LPUMart</a>
+        <div class="mode-switcher"><button data-marketplace-mode="normal">🛍️ General</button><button
+                data-marketplace-mode="grocery">🛒 Grocery</button><button data-marketplace-mode="pharmacy">💊
+                Pharmacy</button></div>
+        <nav><a href="index.html">Home</a><a class="active" href="products.html">Products</a><a
+                href="categories.html">Categories</a><a href="contact.html">Contact</a></nav>
+        <div class="nav-actions"><button class="theme-toggle" id="themeToggle"><span
+                    id="themeIcon">☀</span></button><button class="login-btn" id="authButton">Login</button></div>
+    </header>
+    <section class="feature-hero">
+        <p class="eyebrow">DISCOVER & COMPARE</p>
+        <h1><span data-mode-label>General</span> Products</h1>
+        <p data-mode-description>Explore products from sellers across the marketplace.</p>
+        <div class="quick-benefits">
+            <div class="quick-benefit"><strong>⭐ Customer ratings</strong><span>Compare real marketplace ratings and
+                    review counts.</span></div>
+            <div class="quick-benefit"><strong>🏷️ Value-focused deals</strong><span>See prices, offers and delivery
+                    information together.</span></div>
+            <div class="quick-benefit"><strong>♡ Save favourites</strong><span>Keep products in your wishlist for
+                    later.</span></div>
+            <div class="quick-benefit"><strong>🛒 Easy checkout</strong><span>Add items and complete a detailed delivery
+                    form.</span></div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="shop-tools"><input class="search" id="productSearch" type="search"
+                    placeholder="Search products, brands and categories..."><select id="categoryFilter" class="search">
+                    <option value="">All categories</option>
+                </select><select id="sortFilter" class="search">
+                    <option value="featured">Featured</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="rating">Customer Rating</option>
+                </select></div>
+            <div id="resultCount" class="section-subtitle" style="margin:12px 0 20px"></div>
+            <div class="grid" id="productsGrid"></div>
+            <div class="empty-state" id="productsEmpty">
+                <div>📦</div>
+                <h3>No products found</h3>
+                <p>Try another search, category or marketplace mode.</p>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="footer-logo">LPUMart</div>
+        <p>© 2026 LPUMart. All rights reserved.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="mode.js"></script>
+    <script src="feature-menu.js"></script>
+    <script src="marketplace.js"></script>
+    <script src="cart-ui.js"></script>
+    <script>const q = new URLSearchParams(location.search); const initialSearch = q.get('search') || ''; const searchBox = document.getElementById('productSearch'); if (initialSearch) searchBox.value = initialSearch; const oldRender = window.renderPublicProducts; window.renderPublicProducts = async function (filter = '') { await oldRender(filter); const grid = document.getElementById('productsGrid'); const count = document.getElementById('resultCount'); if (count) count.textContent = `Showing ${grid?.children.length || 0} product(s) in ${getModeConfig().label}`; }; setTimeout(() => renderPublicProducts(initialSearch), 0);</script>
+    <script src="ui-enhancements.js"></script>
+</body>
+
+</html>

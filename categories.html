@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+    <meta name="theme-color" content="#080b12">
+    <title>Categories | LPUMart</title>
+    <link rel="stylesheet" href="marketplace.css">
+    <link rel="stylesheet" href="cart-ui.css">
+</head>
+
+<body>
+    <script>(function () { const t = localStorage.getItem('marketplaceTheme') || 'light'; document.documentElement.classList.toggle('dark-mode', t === 'dark') })();</script>
+    <header class="navbar"><a class="logo" href="index.html">LPUMart</a>
+        <div class="mode-switcher"><button data-marketplace-mode="normal">🛍️ General</button><button
+                data-marketplace-mode="grocery">🛒 Grocery</button><button data-marketplace-mode="pharmacy">💊
+                Pharmacy</button></div>
+        <nav><a href="index.html">Home</a><a href="products.html">Products</a><a class="active"
+                href="categories.html">Categories</a><a href="contact.html">Contact</a></nav>
+        <div class="nav-actions"><button class="theme-toggle" id="themeToggle"><span
+                    id="themeIcon">☀</span></button><button class="login-btn" id="authButton">Login</button></div>
+    </header>
+    <section class="feature-hero">
+        <p class="eyebrow">SHOP BY NEED</p>
+        <h1>Browse <span data-mode-label>General</span> Categories</h1>
+        <p data-mode-description>Browse categories based on the products currently available.</p>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="grid" id="categoriesGrid"></div>
+            <div class="empty-state" id="categoriesEmpty">
+                <div>🛍️</div>
+                <h3>No categories found</h3>
+                <p>Add products from the admin dashboard to create categories.</p>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="footer-logo">LPUMart</div>
+        <p>© 2026 LPUMart. All rights reserved.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="mode.js"></script>
+    <script src="feature-menu.js"></script>
+    <script src="marketplace.js"></script>
+    <script src="cart-ui.js"></script>
+    <script>const categoryIcons = { Electronics: '📱', Fashion: '👕', 'Home & Living': '🏠', Beauty: '💄', Sports: '⚽', Books: '📚', 'Fruits & Vegetables': '🥦', Dairy: '🥛', Bakery: '🥖', Staples: '🌾', Snacks: '🍿', Beverages: '🥤', Household: '🧹', Medicines: '💊', 'Personal Care': '🧴', 'Vitamins & Supplements': '💚', 'First Aid': '🩹', 'Baby Care': '🍼', 'Medical Devices': '🩺' }; async function renderCategories() { const grid = document.getElementById('categoriesGrid'), empty = document.getElementById('categoriesEmpty'), products = await getProducts(), categories = [...new Set(products.map(p => p.category))]; grid.innerHTML = categories.map(c => { const count = products.filter(p => p.category === c).length; return `<article class="card category-card"><div class="card-icon">${categoryIcons[c] || '🛍️'}</div><h3>${escapeHtml(c)}</h3><p>${count} product${count === 1 ? '' : 's'} available</p><a href="products.html?category=${encodeURIComponent(c)}"><button class="product-btn category-view-btn">View Products</button></a></article>` }).join(''); empty.style.display = categories.length ? 'none' : 'block'; } renderCategories(); window.addEventListener('marketplaceModeChanged', renderCategories);</script>
+    <script src="ui-enhancements.js"></script>
+</body>
+
+</html>

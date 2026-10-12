@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+    <meta name="theme-color" content="#080b12">
+    <title>Home | LPUMart</title>
+    <link rel="stylesheet" href="marketplace.css">
+    <link rel="stylesheet" href="cart-ui.css">
+</head>
+
+<body>
+    <script>(function () { const t = localStorage.getItem('marketplaceTheme') || 'light'; document.documentElement.classList.toggle('dark-mode', t === 'dark') })();</script>
+    <header class="navbar"><a class="logo" href="index.html">LPUMart</a>
+        <div class="mode-switcher"><button data-marketplace-mode="normal">🛍️ General</button><button
+                data-marketplace-mode="grocery">🛒 Grocery</button><button data-marketplace-mode="pharmacy">💊
+                Pharmacy</button></div>
+        <nav><a class="active" href="index.html">Home</a><a href="products.html">Products</a><a
+                href="categories.html">Categories</a><a href="contact.html">Contact</a></nav>
+        <div class="nav-actions"><button class="theme-toggle" id="themeToggle"><span
+                    id="themeIcon">☀</span></button><button class="login-btn" id="authButton">Login</button></div>
+    </header>
+    <section class="hero">
+        <p class="eyebrow">YOUR EVERYDAY MARKETPLACE</p>
+        <h1 id="homeModeTitle">Everything You Need, In One Place</h1>
+        <p id="homeModeSubtitle">Discover products from trusted sellers and find great value across our marketplace.</p>
+        <div style="margin-top:22px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap"><a
+                href="products.html"><button class="primary-btn">Explore Products</button></a><a
+                href="categories.html"><button class="secondary-btn">Shop by Category</button></a></div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Why shop here?</h2>
+            <p class="section-subtitle">Useful shopping tools inspired by modern marketplaces, presented in our own
+                design.</p>
+            <div class="quick-benefits">
+                <div class="quick-benefit"><strong>🔎 Find faster</strong><span>Search by product, brand or category and
+                        sort by value or rating.</span></div>
+                <div class="quick-benefit"><strong>⚖️ Compare before buying</strong><span>Put up to three products side
+                        by side.</span></div>
+                <div class="quick-benefit"><strong>📦 Stay in control</strong><span>Track orders and cancel eligible
+                        orders from your account.</span></div>
+                <div class="quick-benefit"><strong>↩️ Help after purchase</strong><span>Returns and customer support are
+                        always within reach.</span></div>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">LPUMart Overview</h2>
+            <p class="section-subtitle">Live inventory for the selected marketplace mode.</p>
+            <div class="stats public-stats">
+                <div class="stat-card"><span class="stat-icon">📦</span>
+                    <div>
+                        <p>Products</p>
+                        <h2 id="homeProductCount">0</h2>
+                    </div>
+                </div>
+                <div class="stat-card"><span class="stat-icon">🛒</span>
+                    <div>
+                        <p>Categories</p>
+                        <h2 id="homeCategoryCount">0</h2>
+                    </div>
+                </div>
+                <div class="stat-card"><span class="stat-icon">💰</span>
+                    <div>
+                        <p>Average Price</p>
+                        <h2 id="homeAveragePrice">₹0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div style="display:flex;justify-content:space-between;gap:15px;align-items:end;flex-wrap:wrap">
+                <div>
+                    <h2 class="section-title">Featured Products</h2>
+                    <p class="section-subtitle">A few highlights from the current mode.</p>
+                </div><a class="small-btn primary" href="products.html">View all products →</a>
+            </div>
+            <div class="grid" id="featuredProducts"></div>
+        </div>
+    </section>
+    <div class="cta">
+        <h2>Ready to start shopping?</h2>
+        <p>Use the left-side Features menu for deals, wishlist, comparison, checkout, orders and support.</p><a
+            href="products.html"><button class="primary-btn">Browse Products</button></a>
+    </div>
+    <footer>
+        <div class="footer-logo">LPUMart</div>
+        <p>© 2026 LPUMart. All rights reserved.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="mode.js"></script>
+    <script src="feature-menu.js"></script>
+    <script src="marketplace.js"></script>
+    <script src="cart-ui.js"></script>
+    <script>
+        async function renderHome() { const products = await getProducts(); const mode = getMarketplaceMode(); const titles = { normal: 'Everything You Need, In One Place', grocery: 'Fresh Groceries, Delivered Simply', pharmacy: 'Healthcare Essentials, In One Place' }; const subtitles = { normal: 'Discover products from trusted sellers and find great value across our marketplace.', grocery: 'Shop fresh produce, pantry staples and everyday household essentials.', pharmacy: 'Find medicines, wellness products and healthcare essentials in one place.' }; homeModeTitle.textContent = titles[mode]; homeModeSubtitle.textContent = subtitles[mode]; homeProductCount.textContent = products.length; homeCategoryCount.textContent = new Set(products.map(p => p.category)).size; const avg = products.length ? products.reduce((s, p) => s + Number(p.price || 0), 0) / products.length : 0; homeAveragePrice.textContent = formatPrice(Math.round(avg)); featuredProducts.innerHTML = products.slice(0, 4).map(p => `<article class="market-card" data-product-id="${p.id}" role="link" tabindex="0"><div class="product-img"><img src="${productImageUrl(p)}" alt="${escapeHtml(p.name)}"></div><div class="product-card-body"><span class="badge">${escapeHtml(p.badge || 'Featured')}</span><small>${escapeHtml(p.brand || 'LPUMart')}</small><h3>${escapeHtml(p.name)}</h3><div class="stars">★★★★★ <span>${Number(p.rating || 4.5).toFixed(1)}</span></div><strong class="price">${formatPrice(p.price)}</strong><p class="delivery">✓ ${escapeHtml(p.delivery_text || 'Free delivery')}</p><div class="product-actions-public"><button class="product-btn" onclick="location.href='product.html?id=${p.id}'">View Product</button><button class="save-btn" onclick="handleWishClick(${p.id},this)">♡</button><button class="cart-btn" onclick="handleCartClick(${p.id},this)">🛒</button></div></div></article>`).join('') || '<div class="empty-state">No products in this marketplace yet.</div>'; loadWishlistState(); }
+        renderHome(); window.addEventListener('marketplaceModeChanged', renderHome);
+    </script>
+    <script src="dimensional-field.js"></script>
+    <script src="ui-enhancements.js"></script>
+</body>
+
+</html>

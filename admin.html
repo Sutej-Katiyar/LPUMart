@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#080b12">
+    <title>Admin Dashboard | LPUMart</title>
+    <link rel="stylesheet" href="admin.css">
+    <script>
+        (function () {
+            if (sessionStorage.getItem("marketplaceAdminAuthenticated") !== "true") {
+                window.location.replace("admin-login.html");
+            }
+        })();
+    </script>
+</head>
+
+<body>
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem("adminTheme") || "light";
+            document.documentElement.classList.toggle("dark-mode", savedTheme === "dark");
+        })();
+    </script>
+
+
+    <header class="admin-navbar">
+        <div class="admin-logo">LPUMart</div>
+
+        <div class="admin-mode-switcher" aria-label="Admin marketplace mode">
+            <button type="button" data-admin-mode="normal">🛍️ General</button>
+            <button type="button" data-admin-mode="grocery">🛒 Grocery</button>
+            <button type="button" data-admin-mode="pharmacy">💊 Pharmacy</button>
+        </div>
+
+        <div class="admin-nav-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark mode">
+                <span id="themeIcon">☀</span>
+            </button>
+            <span class="admin-user">👤 Admin</span>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+        </div>
+    </header>
+
+    <main class="dashboard">
+
+        <div class="dashboard-header">
+            <div>
+                <p class="eyebrow">ADMIN DASHBOARD</p>
+                <h1><span id="adminModeTitle">General</span> Product Management</h1>
+                <p class="dashboard-subtitle" id="adminModeDescription">Add, edit, remove and manage marketplace
+                    products.</p>
+            </div>
+
+            <button class="primary-btn" id="addProductBtn">+ Add Product</button>
+        </div>
+
+        <section class="stats">
+            <div class="stat-card">
+                <span class="stat-icon">📦</span>
+                <div>
+                    <p>Total Products</p>
+                    <h2 id="totalProducts">0</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-icon">💰</span>
+                <div>
+                    <p>Average Price</p>
+                    <h2 id="averagePrice">₹0</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-icon">🛒</span>
+                <div>
+                    <p>Categories</p>
+                    <h2 id="totalCategories">0</h2>
+                </div>
+            </div>
+        </section>
+
+        <section class="admin-insights" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:20px 0">
+            <div class="stat-card"><span class="stat-icon">⚠️</span>
+                <div>
+                    <p>Low Stock</p>
+                    <h2 id="lowStockCount">0</h2>
+                </div>
+            </div>
+            <div class="stat-card"><span class="stat-icon">⭐</span>
+                <div>
+                    <p>Top Rated</p>
+                    <h2 id="topRatedCount">0</h2>
+                </div>
+            </div>
+            <div class="stat-card"><span class="stat-icon">🏷️</span>
+                <div>
+                    <p>Discounted</p>
+                    <h2 id="discountedCount">0</h2>
+                </div>
+            </div>
+        </section>
+
+        <section class="products-panel">
+            <div class="panel-header">
+                <h2>Products</h2>
+                <input type="search" id="searchInput" class="search" placeholder="Search products...">
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTable"></tbody>
+                </table>
+            </div>
+
+            <div id="emptyState" class="empty-state">
+                <div>📦</div>
+                <h3>No products found</h3>
+                <p>Add a product or change your search.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div>
+                    <p class="eyebrow">PRODUCT</p>
+                    <h2 id="modalTitle">Add Product</h2>
+                </div>
+                <button class="close-btn" id="closeModal">×</button>
+            </div>
+
+            <form id="productForm">
+                <input type="hidden" id="productId">
+
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label for="productName">Product Name</label>
+                        <input type="text" id="productName" placeholder="e.g. Wireless Headphones" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="productMode">LPUMart Mode</label>
+                        <select id="productMode" required>
+                            <option value="normal">🛍️ General</option>
+                            <option value="grocery">🛒 Grocery</option>
+                            <option value="pharmacy">💊 Pharmacy</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="productCategory">Category</label>
+                        <select id="productCategory" required>
+                            <option value="">Select category</option>
+                            <option>Electronics</option>
+                            <option>Fashion</option>
+                            <option>Home & Living</option>
+                            <option>Beauty</option>
+                            <option>Sports</option>
+                            <option>Books</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="productPrice">Price (₹)</label>
+                        <input type="number" id="productPrice" min="0" step="1" placeholder="2499" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="productStock">Stock</label>
+                        <input type="number" id="productStock" min="0" step="1" placeholder="50" required>
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label for="productImage">Product Image</label>
+                        <input type="file" id="productImage" accept="image/jpeg,image/png,image/webp,image/gif">
+                        <small class="file-help">Upload JPG, PNG, WEBP or GIF (max 5 MB).</small>
+
+                        <div class="image-preview-wrap" id="imagePreviewWrap">
+                            <img id="imagePreview" class="image-preview" alt="Product image preview">
+                            <button type="button" class="remove-image-btn" id="removeImageBtn">
+                                Remove image
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="productBrand">Brand</label>
+                        <input type="text" id="productBrand" maxlength="100" placeholder="e.g. LPUMart Select">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="productOldPrice">Original Price (₹)</label>
+                        <input type="number" id="productOldPrice" min="0" step="1" placeholder="Optional">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="productRating">Rating</label>
+                        <input type="number" id="productRating" min="0" max="5" step="0.1" placeholder="4.5">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="productReviewCount">Review Count</label>
+                        <input type="number" id="productReviewCount" min="0" step="1" placeholder="0">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="productBadge">Badge</label>
+                        <input type="text" id="productBadge" maxlength="60" placeholder="Best Seller / Featured">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="productDelivery">Delivery Text</label>
+                        <input type="text" id="productDelivery" maxlength="160"
+                            placeholder="Free delivery on eligible orders">
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label for="productDescription">Description</label>
+                        <textarea id="productDescription" rows="4" placeholder="Describe the product..."
+                            required></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="primary-btn" id="saveProductBtn">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="mode.js"></script>
+    <script src="admin.js"></script>
+    <script>
+        const adminLogout = document.getElementById("adminLogout");
+        if (adminLogout) { adminLogout.addEventListener("click", () => { sessionStorage.removeItem("marketplaceAdminAuthenticated"); sessionStorage.removeItem("marketplaceAdminLoginAt"); }); }
+    </script>
+    <script src="ui-enhancements.js"></script>
+</body>
+
+</html>

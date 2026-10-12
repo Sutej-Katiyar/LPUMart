@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+    <meta name="theme-color" content="#080b12">
+    <title>Track Order | LPUMart</title>
+    <link rel="stylesheet" href="marketplace.css">
+    <link rel="stylesheet" href="cart-ui.css">
+</head>
+
+<body>
+    <script>(function () { const t = localStorage.getItem('marketplaceTheme') || 'light'; document.documentElement.classList.toggle('dark-mode', t === 'dark') })();</script>
+    <header class="navbar"><a class="logo" href="index.html">LPUMart</a>
+        <div class="mode-switcher"><button data-marketplace-mode="normal">🛍️ General</button><button
+                data-marketplace-mode="grocery">🛒 Grocery</button><button data-marketplace-mode="pharmacy">💊
+                Pharmacy</button></div>
+        <nav><a href="index.html">Home</a><a href="products.html">Products</a><a href="categories.html">Categories</a><a
+                href="contact.html">Contact</a></nav>
+        <div class="nav-actions"><button class="theme-toggle" id="themeToggle"><span
+                    id="themeIcon">☀</span></button><button class="login-btn" id="authButton">Account</button></div>
+    </header>
+    <section class="feature-hero">
+        <p class="eyebrow">ORDER VISIBILITY</p>
+        <h1>Track Your Order</h1>
+        <p>Enter an order number to see its current status and delivery details.</p>
+    </section>
+    <main class="section">
+        <div class="container">
+            <form id="trackForm" class="feature-form" style="max-width:720px;margin:0 auto 22px"><label
+                    for="orderId">Order number</label>
+                <div style="display:flex;gap:9px;margin-top:7px"><input id="orderId" type="number" min="1" required
+                        placeholder="e.g. 1001" style="flex:1"><button class="primary-btn" type="submit">Track</button>
+                </div>
+                <p id="trackMsg" style="color:var(--muted);font-size:12px;margin-top:8px"></p>
+            </form>
+            <div id="trackResult"></div>
+        </div>
+    </main>
+    <footer>
+        <div class="footer-logo">LPUMart</div>
+        <p>© 2026 LPUMart. All rights reserved.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="mode.js"></script>
+    <script src="marketplace.js"></script>
+    <script src="cart-ui.js"></script>
+    <script src="feature-menu.js"></script>
+    <script>
+        const form = document.getElementById('trackForm'); const result = document.getElementById('trackResult'); const msg = document.getElementById('trackMsg'); const idFromUrl = new URLSearchParams(location.search).get('id'); if (idFromUrl) document.getElementById('orderId').value = idFromUrl;
+        async function renderOrder(id) { const u = await currentUser(); if (!u) { location.href = 'auth.html?next=' + encodeURIComponent(location.href); return; } msg.textContent = 'Loading order…'; const { data: o, error } = await supabaseClient.from('orders').select('*,order_items(product_id,product_name,price,quantity)').eq('id', id).eq('user_id', u.id).maybeSingle(); if (error || !o) { result.innerHTML = '<div class="empty-state" style="display:block"><h3>Order not found</h3><p>Check the order number and make sure you are signed in with the account that placed it.</p></div>'; msg.textContent = ''; return; } msg.textContent = ''; const statuses = ['placed', 'confirmed', 'shipped', 'delivered']; const idx = statuses.indexOf(o.status); const canCancel = ['placed', 'confirmed'].includes(o.status); const steps = [['placed', 'Order placed', 'We received your order.'], ['confirmed', 'Confirmed', 'Your order has been confirmed.'], ['shipped', 'Shipped', 'Your package is on its way.'], ['delivered', 'Delivered', 'Your order has been delivered.']]; const address = [o.shipping_address, o.shipping_city, o.shipping_state, o.shipping_postal_code].filter(Boolean).join(', '); result.innerHTML = `<div class="tracking-card"><div class="order-top"><div><p class="eyebrow">ORDER #${o.id}</p><h2>${escapeHtml(o.status)}</h2><p style="color:var(--muted)">${new Date(o.created_at).toLocaleString('en-IN')}</p></div><strong>${formatPrice(o.total)}</strong></div><div style="margin:18px 0">${steps.map((s, i) => `<div class="tracking-step"><div class="step-dot ${i <= idx ? 'done' : ''}">${i <= idx ? '✓' : i + 1}</div><div><strong>${s[1]}</strong><p style="color:var(--muted);margin-top:4px">${s[2]}</p></div></div>`).join('')}</div>${o.status === 'cancelled' ? '<div class="order-address-box"><strong>Order cancelled</strong><br>This order will not proceed to delivery.</div>' : ''}<div class="order-address-box"><strong>Delivery to</strong><br>${escapeHtml(o.shipping_name)} · ${escapeHtml(o.shipping_phone)}<br>${escapeHtml(address)}${o.shipping_landmark ? `<br>Landmark: ${escapeHtml(o.shipping_landmark)}` : ''}<br><span style="color:var(--muted)">${escapeHtml(o.payment_method || 'Cash on Delivery')}</span></div><h3 style="margin:22px 0 10px">Items</h3>${(o.order_items || []).map(i => `<div class="summary-line"><span>${escapeHtml(i.product_name)} × ${i.quantity}</span><span>${formatPrice(Number(i.price) * Number(i.quantity))} ${i.product_id ? `<a class="compare-view-btn" href="product.html?id=${i.product_id}">View Product</a>` : ''}</span></div>`).join('')}<div class="product-actions" style="margin-top:18px"><a class="small-btn" href="account.html#orders">My Orders</a>${canCancel ? `<button class="small-btn cancel-order-btn" id="trackCancel">Cancel Order</button>` : ''}</div></div>`; if (canCancel) document.getElementById('trackCancel').onclick = async () => { if (!confirm('Cancel this order? This cannot be undone.')) return; const b = document.getElementById('trackCancel'); b.disabled = true; b.textContent = 'Cancelling…'; const { error } = await supabaseClient.from('orders').update({ status: 'cancelled', cancelled_at: new Date().toISOString() }).eq('id', o.id).eq('user_id', u.id).in('status', ['placed', 'confirmed']); if (error) { showToast(error.message); b.disabled = false; b.textContent = 'Cancel Order'; return; } showToast('Order cancelled'); renderOrder(o.id); }; }
+        form.addEventListener('submit', e => { e.preventDefault(); renderOrder(document.getElementById('orderId').value); }); if (idFromUrl) renderOrder(idFromUrl);
+    </script>
+    <script src="ui-enhancements.js"></script>
+</body>
+
+</html>

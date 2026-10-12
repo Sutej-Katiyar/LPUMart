@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+    <meta name="theme-color" content="#080b12">
+    <title>Deals | LPUMart</title>
+    <link rel="stylesheet" href="marketplace.css">
+    <link rel="stylesheet" href="cart-ui.css">
+</head>
+
+<body>
+    <script>(function () { const t = localStorage.getItem('marketplaceTheme') || 'light'; document.documentElement.classList.toggle('dark-mode', t === 'dark') })();</script>
+    <header class="navbar"><a class="logo" href="index.html">LPUMart</a>
+        <div class="mode-switcher"><button data-marketplace-mode="normal">🛍️ General</button><button
+                data-marketplace-mode="grocery">🛒 Grocery</button><button data-marketplace-mode="pharmacy">💊
+                Pharmacy</button></div>
+        <nav><a href="index.html">Home</a><a href="products.html">Products</a><a href="categories.html">Categories</a><a
+                href="contact.html">Contact</a></nav>
+        <div class="nav-actions"><button class="theme-toggle" id="themeToggle"><span
+                    id="themeIcon">☀</span></button><button class="login-btn" id="authButton">Login</button></div>
+    </header>
+    <section class="feature-hero">
+        <p class="eyebrow">VALUE PICKS</p>
+        <h1>Deals & Top Rated</h1>
+        <p>Find discounted products first, followed by highly rated picks.</p>
+    </section>
+    <main class="section">
+        <div class="container">
+            <div id="dealStats" class="quick-benefits" style="margin-bottom:22px"></div>
+            <div id="dealGrid" class="feature-grid"></div>
+        </div>
+    </main>
+    <footer>
+        <div class="footer-logo">LPUMart</div>
+        <p>© 2026 LPUMart. All rights reserved.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="mode.js"></script>
+    <script src="feature-menu.js"></script>
+    <script src="marketplace.js"></script>
+    <script src="cart-ui.js"></script>
+    <script>async function loadDeals() { const { data } = await supabaseClient.from('products').select('*').eq('marketplace_mode', getMarketplaceMode()).order('rating', { ascending: false }); const list = (data || []).map(p => ({ ...p, discount: p.old_price ? Math.max(0, Math.round((1 - Number(p.price) / Number(p.old_price)) * 100)) : 0 })).sort((a, b) => b.discount - a.discount || Number(b.rating) - Number(a.rating)); const discounts = list.filter(p => p.discount > 0).length; dealStats.innerHTML = `<div class="quick-benefit"><strong>🏷️ ${discounts} discounted</strong><span>Products with an active old/new price comparison.</span></div><div class="quick-benefit"><strong>⭐ ${list.filter(p => Number(p.rating) >= 4.5).length} top rated</strong><span>Highly rated products in this marketplace mode.</span></div><div class="quick-benefit"><strong>🛒 Quick shopping</strong><span>Add to cart or open full product details.</span></div><div class="quick-benefit"><strong>⚖️ Compare</strong><span>Use the side menu to compare up to three products.</span></div>`; dealGrid.innerHTML = list.map(p => `<article class="feature-card deal-card" data-product-id="${p.id}" role="link" tabindex="0"><span class="deal-save">${p.discount > 0 ? p.discount + '% OFF' : 'Top Rated'}</span><div class="deal-img"><img src="${productImageUrl(p)}" alt="${escapeHtml(p.name)}"></div><small>${escapeHtml(p.brand || 'LPUMart')}</small><h3>${escapeHtml(p.name)}</h3><div class="stars">★★★★★ <span>${Number(p.rating || 4.5).toFixed(1)} (${Number(p.review_count || 0)})</span></div><p>${escapeHtml(p.description)}</p><strong class="price">${formatPrice(p.price)}</strong> ${p.old_price ? `<del>${formatPrice(p.old_price)}</del>` : ''}<div class="product-actions-public" style="margin-top:15px"><button class="product-btn" onclick="location.href='product.html?id=${p.id}'">View Product</button><button class="save-btn" onclick="handleWishClick(${p.id},this)">♡</button><button class="cart-btn" onclick="handleCartClick(${p.id},this)">🛒</button></div></article>`).join('') || '<div class="empty-state" style="display:block">No products available.</div>'; loadWishlistState(); } loadDeals(); window.addEventListener('marketplaceModeChanged', loadDeals);</script>
+    <script src="ui-enhancements.js"></script>
+</body>
+
+</html>

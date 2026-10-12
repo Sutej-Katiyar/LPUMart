@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#080b12">
+    <title>Returns & Help | LPUMart</title>
+    <link rel="stylesheet" href="marketplace.css">
+    <link rel="stylesheet" href="cart-ui.css">
+</head>
+
+<body>
+    <script>(function () { const t = localStorage.getItem('marketplaceTheme') || 'light'; document.documentElement.classList.toggle('dark-mode', t === 'dark') })();</script>
+    <header class="navbar"><a class="logo" href="index.html">LPUMart</a>
+        <nav><a href="index.html">Home</a><a href="products.html">Products</a><a href="categories.html">Categories</a><a
+                href="contact.html">Contact</a></nav>
+        <div class="nav-actions"><button class="theme-toggle" id="themeToggle"><span
+                    id="themeIcon">☀</span></button><button class="login-btn" id="authButton">Login</button></div>
+    </header>
+    <section class="feature-hero">
+        <h1>Returns & Customer Help</h1>
+        <p>Clear policies and quick paths for common post-purchase issues.</p>
+    </section>
+    <main class="section">
+        <div class="container">
+            <div class="policy-list">
+                <article class="policy-item">
+                    <h3>Easy returns</h3>
+                    <p>Open your account, go to Orders, select the item and contact support for an eligible return or
+                        replacement.</p>
+                </article>
+                <article class="policy-item">
+                    <h3>Damaged or incorrect item</h3>
+                    <p>Report the issue as soon as possible with photos and your order number so support can review it.
+                    </p>
+                </article>
+                <article class="policy-item">
+                    <h3>Order cancellation</h3>
+                    <p>Cancellation is available before dispatch where supported. After dispatch, use the return process
+                        instead.</p>
+                </article>
+                <article class="policy-item">
+                    <h3>Need more help?</h3>
+                    <p>Our Contact page is the fastest route for account, delivery and product questions.</p><a
+                        href="contact.html"><button class="primary-btn" style="margin-top:12px">Contact
+                            Support</button></a>
+                </article>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="footer-logo"><a href="index.html">LPUMart</a></div>
+        <p>© 2026 LPUMart. All rights reserved.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="feature-menu.js"></script>
+    <script src="marketplace.js"></script>
+    <script src="cart-ui.js"></script>
+    <script src="ui-enhancements.js"></script>
+</body>
+
+</html>

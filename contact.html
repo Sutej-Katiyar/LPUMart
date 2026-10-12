@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#080b12">
+    <title>Contact Us | LPUMart</title>
+    <link rel="stylesheet" href="marketplace.css">
+    <link rel="stylesheet" href="cart-ui.css">
+    <link rel="stylesheet" href="contact.css">
+</head>
+
+<body class="contact-page">
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem("marketplaceTheme") || "light";
+            document.documentElement.classList.toggle("dark-mode", savedTheme === "dark");
+        })();
+    </script>
+
+
+    <header class="navbar">
+        <a class="logo" href="index.html" aria-label="Go to LPUMart home">LPUMart</a>
+        <div class="mode-switcher" aria-label="LPUMart mode">
+            <button type="button" data-marketplace-mode="normal">🛍️ General</button>
+            <button type="button" data-marketplace-mode="grocery">🛒 Grocery</button>
+            <button type="button" data-marketplace-mode="pharmacy">💊 Pharmacy</button>
+        </div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="categories.html">Categories</a>
+            <a href="contact.html" class="active">Contact</a>
+        </nav>
+        <div class="nav-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark mode" title="Switch to dark mode">
+                <span id="themeIcon">☀</span>
+            </button>
+            <button class="login-btn" id="authButton" type="button"
+                onclick="window.location.href='auth.html'">Login</button>
+        </div>
+    </header>
+
+    <section class="contact-hero">
+        <h1>Contact Us</h1>
+        <p>
+            Have a question, need help with an order, or want to become a seller?
+            We're here to help.
+        </p>
+    </section>
+
+    <section class="contact-container">
+
+        <div class="contact-info">
+            <h2>Get in Touch</h2>
+            <p class="info-text">
+                Our support team is always ready to help you with your marketplace
+                experience.
+            </p>
+
+            <div class="info-box">
+                <div class="icon">📍</div>
+                <div>
+                    <h3>Our Location</h3>
+                    <p>Jalandhar, Punjab, India</p>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="icon">📧</div>
+                <div>
+                    <h3>Email Us</h3>
+                    <p>support@marketplace.com</p>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="icon">📞</div>
+                <div>
+                    <h3>Call Us</h3>
+                    <p>+91 98765 43210</p>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="icon">🕐</div>
+                <div>
+                    <h3>Working Hours</h3>
+                    <p>Mon - Sat: 9:00 AM - 6:00 PM</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-form">
+            <h2>Send Us a Message</h2>
+
+            <form id="supportForm">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" placeholder="Enter your name" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="Enter your email" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" placeholder="What can we help you with?" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" rows="6" placeholder="Write your message here..." required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Send Message</button>
+                <p id="supportMessage" style="margin-top:12px;color:var(--muted);font-size:13px"></p>
+            </form>
+        </div>
+    </section>
+
+    <section class="faq">
+        <h2>Frequently Asked Questions</h2>
+        <p class="faq-subtitle">Quick answers to common questions</p>
+
+        <div class="faq-container">
+            <div class="faq-card">
+                <h3>How can I track my order?</h3>
+                <p>You can track your order from your account under the "My Orders" section.</p>
+            </div>
+
+            <div class="faq-card">
+                <h3>How do I become a seller?</h3>
+                <p>Create an account and select "Become a Seller" from your dashboard.</p>
+            </div>
+
+            <div class="faq-card">
+                <h3>How can I request a refund?</h3>
+                <p>Go to your orders, select the relevant order and choose the refund or return option.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">LPUMart</div>
+        <p>© 2026 LPUMart. All rights reserved.</p>
+    </footer>
+
+
+
+    <script>document.getElementById('supportForm')?.addEventListener('submit', function (e) { e.preventDefault(); const m = document.getElementById('supportMessage'); m.textContent = 'Thanks — your support request has been captured for this demo. For a live deployment, connect this form to your support inbox or database.'; this.reset(); });</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="mode.js"></script>
+    <script src="feature-menu.js"></script>
+    <script src="marketplace.js"></script>
+    <script src="cart-ui.js"></script>
+    <script src="ui-enhancements.js"></script>
+</body>
+
+</html>

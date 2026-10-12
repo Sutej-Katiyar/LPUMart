@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+  <meta name="theme-color" content="#080b12">
+  <title>My Account | LPUMart</title>
+  <link rel="stylesheet" href="marketplace.css">
+  <link rel="stylesheet" href="cart-ui.css">
+  <link rel="stylesheet" href="account.css">
+</head>
+
+<body>
+  <script>(function () { const t = localStorage.getItem('marketplaceTheme') || 'light'; document.documentElement.classList.toggle('dark-mode', t === 'dark'); })();</script>
+  <header class="navbar">
+    <a class="logo" href="index.html" aria-label="Go to LPUMart home">LPUMart</a>
+    <div class="mode-switcher"><button data-marketplace-mode="normal">🛍️ General</button><button
+        data-marketplace-mode="grocery">🛒 Grocery</button><button data-marketplace-mode="pharmacy">💊 Pharmacy</button>
+    </div>
+    <nav><a href="index.html">Home</a><a href="products.html">Products</a><a href="categories.html">Categories</a><a
+        href="contact.html">Contact</a></nav>
+    <div class="nav-actions"><button class="theme-toggle" id="themeToggle"><span id="themeIcon">☀</span></button><button
+        class="login-btn user-account" id="authButton">Account</button></div>
+  </header>
+  <main class="account-shell">
+    <section class="account-hero">
+      <div>
+        <p class="eyebrow">YOUR MARKETPLACE</p>
+        <h1>My Account</h1>
+        <p>Manage your profile, orders, wishlist and cart from one place.</p>
+      </div>
+      <div class="account-avatar" id="avatar">U</div>
+    </section>
+    <section class="account-grid">
+      <aside class="account-sidebar">
+        <button class="account-tab active" data-tab="profile">👤 Profile</button><button class="account-tab"
+          data-tab="orders">📦 Orders <span id="orderCount">0</span></button><button class="account-tab"
+          data-tab="wishlist">♡ Wishlist <span id="wishCount">0</span></button><button class="account-tab"
+          data-tab="cart">🛒 Cart <span id="cartCount">0</span></button><button class="account-tab" data-tab="recent">🕘
+          Recently Viewed</button><button class="account-tab" data-tab="alerts">🔔 Notifications</button><button
+          class="account-tab" data-tab="addresses">📍 Addresses</button>
+        <button class="logout-account" id="logoutBtn">Sign out</button>
+      </aside>
+      <section class="account-content">
+        <div class="account-panel active" id="profilePanel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">PERSONAL DETAILS</p>
+              <h2>Your Profile</h2>
+            </div><button class="edit-profile-btn" id="editProfileBtn">✎ Edit Details</button>
+          </div>
+          <div class="profile-card">
+            <div class="profile-avatar" id="profileAvatar">U</div>
+            <div>
+              <h3 id="profileName">User</h3>
+              <p id="profileEmail">—</p><span class="verified-pill">Supabase account</span>
+            </div>
+          </div>
+          <div class="details-grid">
+            <div><label>Full name</label>
+              <p id="detailName">—</p>
+            </div>
+            <div><label>Email</label>
+              <p id="detailEmail">—</p>
+            </div>
+            <div><label>Phone</label>
+              <p id="detailPhone">Not added</p>
+            </div>
+            <div><label>Address</label>
+              <p id="detailAddress">Not added</p>
+            </div>
+            <div><label>Account ID</label>
+              <p id="detailId">—</p>
+            </div>
+            <div><label>Joined</label>
+              <p id="detailJoined">—</p>
+            </div>
+          </div>
+          <div class="profile-edit-card" id="profileEditCard" hidden>
+            <div class="edit-card-heading">
+              <div>
+                <p class="eyebrow">UPDATE ACCOUNT</p>
+                <h3>Edit your details</h3>
+                <p>Changes are saved securely to your Supabase account.</p>
+              </div><button type="button" class="close-edit" id="closeProfileEdit">×</button>
+            </div>
+            <form id="profileEditForm">
+              <div class="edit-fields"><label>Full name<input id="editFullName" type="text" required
+                    maxlength="100"></label><label>Email<input id="editEmail" type="email"
+                    required></label><label>Phone<input id="editPhone" type="tel" maxlength="30"
+                    placeholder="Optional"></label><label>Address<textarea id="editAddress" rows="3" maxlength="250"
+                    placeholder="Optional"></textarea></label></div>
+              <p class="edit-note" id="profileEditMessage"></p>
+              <div class="edit-actions"><button type="button" class="small-btn"
+                  id="cancelProfileEdit">Cancel</button><button type="submit" class="small-btn primary"
+                  id="saveProfileBtn">Save Changes</button></div>
+            </form>
+          </div>
+        </div>
+        <div class="account-panel" id="ordersPanel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">PURCHASE HISTORY</p>
+              <h2>Current Orders</h2>
+            </div>
+          </div>
+          <div id="ordersList" class="stack-list"></div>
+        </div>
+        <div class="account-panel" id="wishlistPanel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">SAVED FOR LATER</p>
+              <h2>Your Wishlist</h2>
+            </div>
+          </div>
+          <div id="wishlistList" class="account-product-list"></div>
+        </div>
+        <div class="account-panel" id="cartPanel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">READY TO BUY</p>
+              <h2>Your Cart</h2>
+            </div>
+          </div>
+          <div id="cartList" class="account-product-list"></div>
+          <div class="cart-summary" id="cartSummary"></div>
+        </div>
+        <div class="account-panel" id="recentPanel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">SHOPPING HISTORY</p>
+              <h2>Recently Viewed</h2>
+            </div>
+          </div>
+          <div id="recentlyViewedList" class="account-product-list">
+            <div class="empty-state">Loading recently viewed products…</div>
+          </div>
+        </div>
+        <div class="account-panel" id="alertsPanel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">STAY UPDATED</p>
+              <h2>Notifications</h2>
+            </div>
+          </div>
+          <div id="notificationsList" class="stack-list">
+            <div class="empty-state">Loading notifications…</div>
+          </div>
+        </div>
+        <div class="account-panel" id="addressesPanel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">DELIVERY</p>
+              <h2>Saved Addresses</h2>
+            </div>
+          </div>
+          <div id="addressesList" class="stack-list">
+            <div class="empty-state">Saved addresses can be managed here.</div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+  <footer>
+    <div class="footer-logo">LPUMart</div>
+    <p>© 2026 LPUMart. All rights reserved.</p>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="mode.js"></script>
+  <script src="feature-menu.js"></script>
+  <script src="account.js"></script>
+  <script src="marketplace.js"></script>
+  <script src="cart-ui.js"></script>
+  <script src="ui-enhancements.js"></script>
+</body>
+
+</html>

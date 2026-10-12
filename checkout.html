@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+  <meta name="theme-color" content="#080b12">
+  <title>Checkout | LPUMart</title>
+  <link rel="stylesheet" href="marketplace.css">
+  <link rel="stylesheet" href="cart-ui.css">
+</head>
+
+<body>
+  <script>(function () { const t = localStorage.getItem('marketplaceTheme') || 'light'; document.documentElement.classList.toggle('dark-mode', t === 'dark') })();</script>
+  <header class="navbar"><a class="logo" href="index.html">LPUMart</a>
+    <div class="mode-switcher"><button data-marketplace-mode="normal">🛍️ General</button><button
+        data-marketplace-mode="grocery">🛒 Grocery</button><button data-marketplace-mode="pharmacy">💊 Pharmacy</button>
+    </div>
+    <nav><a href="index.html">Home</a><a href="products.html">Products</a><a href="categories.html">Categories</a><a
+        href="contact.html">Contact</a></nav>
+    <div class="nav-actions"><button class="theme-toggle" id="themeToggle"><span id="themeIcon">☀</span></button><button
+        class="login-btn" id="authButton">Account</button></div>
+  </header>
+  <section class="feature-hero">
+    <p class="eyebrow">ORDER & DELIVERY</p>
+    <h1>Complete Your Order</h1>
+    <p>Review your items, choose delivery details and place your order securely.</p>
+  </section>
+  <main class="section">
+    <div class="container">
+      <div class="checkout-progress">
+        <div class="progress-step active"><span class="dot">1</span><span>Delivery</span></div><span
+          class="line"></span>
+        <div class="progress-step active"><span class="dot">2</span><span>Payment</span></div><span class="line"></span>
+        <div class="progress-step active"><span class="dot">3</span><span>Review</span></div>
+      </div>
+      <div class="checkout-layout"
+        style="display:grid;grid-template-columns:minmax(0,1.45fr) minmax(290px,.75fr);gap:24px">
+        <form id="checkoutForm" class="feature-form">
+          <div class="checkout-section">
+            <h2>1. Delivery information</h2>
+            <p style="color:var(--muted);font-size:13px">Enter the person and address that should receive this order.
+            </p>
+            <div id="savedAddresses" class="saved-addresses"></div>
+            <div class="form-row-feature">
+              <div class="form-group-feature"><label for="name">Full name *</label><input id="name" autocomplete="name"
+                  required placeholder="e.g. Rahul Sharma"></div>
+              <div class="form-group-feature"><label for="email">Email *</label><input id="email" type="email"
+                  autocomplete="email" required placeholder="you@example.com"></div>
+            </div>
+            <div class="form-row-feature">
+              <div class="form-group-feature"><label for="phone">Phone number *</label><input id="phone" type="tel"
+                  inputmode="tel" autocomplete="tel" required minlength="10" maxlength="15"
+                  placeholder="10-digit mobile number"></div>
+              <div class="form-group-feature"><label for="postal">PIN code *</label><input id="postal"
+                  inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{6}" maxlength="6" required
+                  placeholder="6-digit PIN code"></div>
+            </div>
+            <div class="form-group-feature"><label for="address">House / Flat / Street address *</label><textarea
+                id="address" rows="3" autocomplete="street-address" required
+                placeholder="House/flat number, building, street and area"></textarea></div>
+            <div class="form-row-feature">
+              <div class="form-group-feature"><label for="city">City *</label><input id="city"
+                  autocomplete="address-level2" required placeholder="City"></div>
+              <div class="form-group-feature"><label for="state">State *</label><input id="state"
+                  autocomplete="address-level1" required placeholder="State"></div>
+            </div>
+            <div class="form-group-feature"><label for="landmark">Landmark <span
+                  style="font-weight:400;color:var(--muted)">(optional)</span></label><input id="landmark"
+                placeholder="Nearby landmark"></div><label
+              style="display:flex;gap:9px;align-items:center;font-size:13px"><input id="saveAddress" type="checkbox">
+              Save this address to my account</label>
+          </div>
+          <div class="checkout-section">
+            <h2>2. Payment</h2>
+            <div class="form-group-feature"><label for="payment">Payment method *</label><select id="payment" required>
+                <option value="Cash on Delivery">Cash on Delivery</option>
+                <option value="UPI / Online Payment">UPI / Online Payment</option>
+              </select></div>
+            <div id="upiPanel" class="upi-panel" hidden>
+              <div class="upi-head">
+                <div><strong>Pay securely with UPI</strong>
+                  <p>Use any UPI app such as Google Pay, PhonePe, Paytm or BHIM.</p>
+                </div><span class="upi-badge">UPI</span>
+              </div>
+              <div class="upi-pay-grid">
+                <div class="upi-qr-wrap">
+                  <div id="upiQr" class="upi-qr"></div><small>Scan this QR with your UPI app</small>
+                </div>
+                <div class="upi-details">
+                  <div class="upi-amount"><span>Amount to pay</span><strong id="upiAmount">₹0</strong></div>
+                  <div class="form-group-feature"><label for="upiId">Merchant UPI ID</label><input id="upiId" readonly>
+                  </div><button type="button" class="primary-btn" id="upiPayBtn">Open UPI App</button>
+                  <p class="upi-note">On mobile, this opens your installed UPI app. On desktop, scan the QR code.</p>
+                  <label class="upi-paid-check"><input id="upiPaid" type="checkbox"> <span>I have completed the UPI
+                      payment.</span></label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="checkout-section">
+            <h2>3. Offers & confirmation</h2><label for="coupon"
+              style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Coupon code</label>
+            <div class="coupon-row"><input id="coupon" placeholder="Try WELCOME10 or SAVE5"><button type="button"
+                id="applyCoupon">Apply</button></div>
+            <p class="coupon-message" id="couponMessage">Have a coupon? Apply it before placing the order.</p>
+            <div class="checkout-confirm"
+              style="margin-top:17px;padding:14px;border:1px solid var(--border);border-radius:12px"><label
+                style="display:flex;gap:10px;align-items:flex-start"><input id="confirmDetails" type="checkbox" required
+                  style="margin-top:4px"><span>I confirm that all contact, delivery and payment details are correct and
+                  I want to place this order.</span></label></div><button class="primary-btn" id="placeOrderBtn"
+              type="submit" style="width:100%;margin-top:15px">Place Order</button>
+            <p id="checkoutMsg" style="margin-top:12px;color:var(--muted)"></p>
+            <p class="payment-disclaimer">UPI intent/QR payment is supported. Payment completion is confirmed by the
+              customer; automatic bank-side verification requires a payment gateway integration.</p>
+          </div>
+        </form>
+        <aside class="order-summary">
+          <h2>Order Summary</h2>
+          <div id="summaryItems"></div>
+          <div class="summary-line"><span>Subtotal</span><strong id="subtotal">₹0</strong></div>
+          <div class="summary-line"><span>Delivery</span><strong id="shipping">Free</strong></div>
+          <div class="summary-line discount-line" id="discountRow" hidden><span>Discount</span><strong
+              id="discount">-₹0</strong></div>
+          <div class="summary-total"><span>Total</span><span id="total">₹0</span></div>
+          <p style="color:var(--muted);font-size:12px;margin-top:14px">You can cancel an eligible order from My Account
+            before it ships.</p>
+        </aside>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-logo">LPUMart</div>
+    <p>© 2026 LPUMart. All rights reserved.</p>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="mode.js"></script>
+  <script src="marketplace.js"></script>
+  <script src="cart-ui.js"></script>
+  <script src="feature-menu.js"></script>
+  <script>
+    let cart = [], products = [], subtotalValue = 0, discountValue = 0, appliedCoupon = null, savedAddresses = [];
+    // Replace this with your own merchant UPI ID before going live.
+    const MERCHANT_UPI_ID = '7008242098@ybl';
+    const MERCHANT_NAME = 'LPUMart';
+    function val(id) { return document.getElementById(id)?.value.trim() || ''; }
+    function addressText(a) { return [a.address_line, a.city, a.state, a.postal_code].filter(Boolean).join(', '); }
+    async function initCheckout() { const u = await currentUser(); if (!u) { location.href = 'auth.html?next=checkout.html'; return; } document.getElementById('email').value = u.email || ''; document.getElementById('name').value = u.user_metadata?.full_name || u.user_metadata?.name || ''; document.getElementById('phone').value = u.user_metadata?.phone || ''; const { data: addresses } = await supabaseClient.from('saved_addresses').select('*').eq('user_id', u.id).order('is_default', { ascending: false }).order('created_at', { ascending: false }); savedAddresses = addresses || []; renderSavedAddresses(); const { data, error } = await supabaseClient.from('cart_items').select('id,product_id,quantity').eq('user_id', u.id); if (error || !data?.length) { document.getElementById('summaryItems').innerHTML = '<p>Your cart is empty. <a href="products.html">Shop products</a>.</p>'; document.getElementById('placeOrderBtn').disabled = true; return; } cart = data; const ids = data.map(x => x.product_id); const res = await supabaseClient.from('products').select('*').in('id', ids); products = res.data || []; renderSummary(); }
+    function renderSavedAddresses() { const box = document.getElementById('savedAddresses'); if (!savedAddresses.length) { box.innerHTML = ''; return; } box.innerHTML = '<p style="font-size:13px;font-weight:700;margin:14px 0 7px">Use a saved address</p>' + savedAddresses.map((a, i) => `<label class="saved-address-option"><input type="radio" name="savedAddress" value="${i}"><span><strong>${escapeHtml(a.label || 'Saved Address')}${a.is_default ? ' · Default' : ''}</strong><small>${escapeHtml(a.full_name || '')} · ${escapeHtml(a.phone || '')}<br>${escapeHtml(addressText(a))}</small></span></label>`).join(''); box.querySelectorAll('input').forEach(r => r.addEventListener('change', () => fillAddress(savedAddresses[Number(r.value)]))); }
+    function fillAddress(a) { document.getElementById('name').value = a.full_name || document.getElementById('name').value; document.getElementById('phone').value = a.phone || ''; document.getElementById('address').value = a.address_line || ''; document.getElementById('city').value = a.city || ''; document.getElementById('state').value = a.state || ''; document.getElementById('postal').value = a.postal_code || ''; }
+    function renderSummary() { subtotalValue = cart.reduce((sum, c) => { const p = products.find(x => x.id === c.product_id); return sum + (p ? Number(p.price) * Number(c.quantity) : 0) }, 0); document.getElementById('summaryItems').innerHTML = cart.map(c => { const p = products.find(x => x.id === c.product_id); if (!p) return ''; return `<div class="summary-line"><span>${escapeHtml(p.name)} × ${c.quantity}</span><strong>${formatPrice(Number(p.price) * Number(c.quantity))}</strong></div>` }).join(''); document.getElementById('subtotal').textContent = formatPrice(subtotalValue); renderTotals(); }
+
+    function updateUpiPaymentUI() {
+      const isUpi = val('payment') === 'UPI / Online Payment';
+      const panel = document.getElementById('upiPanel');
+      if (!panel) return;
+      panel.hidden = !isUpi;
+      if (!isUpi) return;
+      const total = Math.max(0, subtotalValue - discountValue);
+      document.getElementById('upiAmount').textContent = formatPrice(total);
+      document.getElementById('upiId').value = MERCHANT_UPI_ID;
+      const qr = document.getElementById('upiQr');
+      qr.innerHTML = '';
+      if (window.QRCode) {
+        const upiUrl = `upi://pay?pa=${encodeURIComponent(MERCHANT_UPI_ID)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent('LPUMart order payment')}`;
+        new QRCode(qr, { text: upiUrl, width: 180, height: 180, correctLevel: QRCode.CorrectLevel.M });
+      }
+    }
+
+    document.getElementById('payment').addEventListener('change', updateUpiPaymentUI);
+    document.getElementById('upiPayBtn').addEventListener('click', () => {
+      const total = Math.max(0, subtotalValue - discountValue);
+      const upiUrl = `upi://pay?pa=${encodeURIComponent(MERCHANT_UPI_ID)}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent('LPUMart order payment')}`;
+      window.location.href = upiUrl;
+    });
+
+    function renderTotals() { const discount = Math.min(discountValue, subtotalValue); const total = Math.max(0, subtotalValue - discount); document.getElementById('shipping').textContent = 'Free'; document.getElementById('discount').textContent = '-' + formatPrice(discount); document.getElementById('discountRow').hidden = !discount; document.getElementById('total').textContent = formatPrice(total); updateUpiPaymentUI(); }
+    document.getElementById('applyCoupon').addEventListener('click', async () => { const code = val('coupon').toUpperCase(); const msg = document.getElementById('couponMessage'); if (!code) { msg.textContent = 'Enter a coupon code first.'; return; } const { data, error } = await supabaseClient.from('coupons').select('*').eq('code', code).eq('active', true).maybeSingle(); if (error || !data) { appliedCoupon = null; discountValue = 0; msg.textContent = 'That coupon is not active or could not be found.'; renderTotals(); return; } if (Number(data.min_order || 0) > subtotalValue) { appliedCoupon = null; discountValue = 0; msg.textContent = `Minimum order for ${code} is ${formatPrice(data.min_order)}.`; renderTotals(); return; } appliedCoupon = data; discountValue = Math.round(subtotalValue * Number(data.discount_percent || 0) / 100 * 100) / 100; msg.textContent = `${code} applied — ${data.discount_percent}% off ✓`; renderTotals(); });
+    document.getElementById('checkoutForm').addEventListener('submit', async e => { e.preventDefault(); const u = await currentUser(); if (!u) return; const btn = document.getElementById('placeOrderBtn'), msg = document.getElementById('checkoutMsg'); if (val('payment') === 'UPI / Online Payment' && !document.getElementById('upiPaid').checked) { msg.textContent = 'Please complete the UPI payment and tick the confirmation box before placing the order.'; document.getElementById('upiPanel').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; } btn.disabled = true; btn.textContent = 'Placing order…'; msg.textContent = ''; const finalTotal = Math.max(0, subtotalValue - discountValue); const payload = { user_id: u.id, status: 'placed', total: finalTotal, discount: discountValue, coupon_code: appliedCoupon?.code || null, shipping_fee: 0, shipping_name: val('name'), shipping_email: val('email'), shipping_phone: val('phone'), shipping_address: val('address'), shipping_city: val('city'), shipping_state: val('state'), shipping_postal_code: val('postal'), shipping_landmark: val('landmark'), payment_method: val('payment') }; const { data: order, error } = await supabaseClient.from('orders').insert(payload).select().single(); if (error) { msg.textContent = error.message; btn.disabled = false; btn.textContent = 'Place Order'; return; } const items = cart.map(c => { const p = products.find(x => x.id === c.product_id); return { order_id: order.id, product_id: p.id, product_name: p.name, price: p.price, quantity: c.quantity } }); const { error: itemError } = await supabaseClient.from('order_items').insert(items); if (itemError) { msg.textContent = itemError.message; btn.disabled = false; btn.textContent = 'Place Order'; return; } if (document.getElementById('saveAddress').checked) { const { error: addrError } = await supabaseClient.from('saved_addresses').insert({ user_id: u.id, label: 'Home', full_name: val('name'), phone: val('phone'), address_line: val('address'), city: val('city'), state: val('state'), postal_code: val('postal'), is_default: savedAddresses.length === 0 }); if (addrError) console.warn(addrError.message); } await supabaseClient.from('cart_items').delete().eq('user_id', u.id); location.href = 'track-order.html?id=' + order.id; });
+    document.addEventListener('DOMContentLoaded', initCheckout);
+  </script>
+  <script src="ui-enhancements.js"></script>
+</body>
+
+</html>

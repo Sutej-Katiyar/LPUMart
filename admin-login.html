@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#080b12">
+    <title>Admin Login | LPUMart</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+    <div class="login-page"><a href="index.html" class="admin-back">← Back to LPUMart</a>
+        <div class="login-card">
+            <div class="logo">LPUMart</div>
+            <h1>Admin Login</h1>
+            <p>This is a separate admin sign-in. Your normal LPUMart login does not grant access.</p>
+
+            <form id="loginForm">
+                <label for="email">Admin Email</label>
+                <input id="email" type="email" placeholder="admin@example.com" required>
+
+                <label for="password">Password</label>
+                <input id="password" type="password" placeholder="Your password" required>
+
+                <button type="submit" class="login-submit">Sign In</button>
+                <p id="loginError" class="login-error"></p>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        const form = document.getElementById("loginForm");
+        const errorBox = document.getElementById("loginError");
+
+        sessionStorage.removeItem("marketplaceAdminAuthenticated");
+
+        form.addEventListener("submit", async event => {
+            event.preventDefault();
+            errorBox.textContent = "";
+
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+
+            const { error } = await supabaseClient.auth.signInWithPassword({
+                email,
+                password
+            });
+
+            if (error) {
+                errorBox.textContent = error.message;
+                return;
+            }
+
+            sessionStorage.setItem("marketplaceAdminAuthenticated", "true");
+            sessionStorage.setItem("marketplaceAdminLoginAt", String(Date.now()));
+            window.location.replace("admin.html");
+        });
+    </script>
+    <script src="ui-enhancements.js"></script>
+</body>
+
+</html>
